@@ -7,18 +7,19 @@ export default {
     ...mapState(useCounterStore, ['quantity', 'OrderId', 'ProductId', 'price', 'orders'])
   },
   methods: {
-    ...mapActions(useCounterStore, ['addOrderDetail', 'listOrder', 'removeItem'])
-    // handleAdd(data) {
-    //   this.addOrderDetail(data)
-    // }
+    ...mapActions(useCounterStore, [
+      'addOrderDetail',
+      'listOrderDetail',
+      'removeItem',
+      'listOrder',
+      'midTrans'
+    ])
   },
   created() {
     this.addOrderDetail()
+    this.listOrderDetail()
     this.listOrder()
   }
-  // watch: {
-  //   orders(newOrder) {}
-  // }
 }
 </script>
 
@@ -28,7 +29,7 @@ export default {
     <h2 class="mb-4">Order</h2>
 
     <RouterLink to="/">
-      <button class="btn btn-primary" onclick="confirmOrder()">ADD MORE ITEM</button>
+      <button class="btn btn-primary">ADD MORE ITEM</button>
     </RouterLink>
 
     <br />
@@ -64,6 +65,6 @@ export default {
         </div>
       </div>
     </div>
-    <button class="btn btn-primary" onclick="confirmOrder()">Confirm Order</button>
+    <button @click="midTrans" class="btn btn-primary">Confirm Order</button>
   </div>
 </template>
