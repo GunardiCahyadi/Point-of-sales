@@ -8,7 +8,8 @@ export const useCounterStore = defineStore('counter', {
       url: 'http://localhost:3000',
       products: null,
       tableNo: '',
-      orders: null
+      orders: null,
+      order: null
     }
   },
   actions: {
@@ -42,16 +43,15 @@ export const useCounterStore = defineStore('counter', {
         console.log(err)
       }
     },
-    async listOrder() {
+    async listOrderDetail() {
       try {
         const orderId = localStorage.getItem('orderId')
         const { data } = await axios({
           method: 'GET',
-          url: this.url + '/orders' + `/${orderId}`
+          url: this.url + '/orderdetails' + `/${orderId}`
         })
 
         this.orders = data.data
-        console.log(orders, '<<<<<< oredres')
       } catch (err) {
         console.log(err)
       }
@@ -67,7 +67,7 @@ export const useCounterStore = defineStore('counter', {
             tableId: localStorage.getItem('tableId')
           }
         })
-        this.listOrder()
+        this.listOrderDetail()
         this.router.push('/order')
       } catch (err) {
         console.log(err)
@@ -84,8 +84,34 @@ export const useCounterStore = defineStore('counter', {
             tableId: localStorage.getItem('tableId')
           }
         })
-        this.listOrder()
+        this.listOrderDetail()
         this.router.push('/order')
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async listOrder() {
+      try {
+        const orderId = localStorage.getItem('orderId')
+        const { data } = await axios({
+          method: 'GET',
+          url: this.url + '/orders' + `/${orderId}`
+        })
+        // console.log(data.order, '<<< ini data')
+        this.order = data.order
+        // this.router.push('/ordersummary')
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async midTrans() {
+      try {
+        const orderId = localStorage.getItem('orderId')
+        const { data } = await axios({
+          method: 'POST',
+          url: this.url + `/generate-midtrans-token/${orderId}`
+        })
+        this.router.push('/ordersummary')
       } catch (err) {
         console.log(err)
       }
