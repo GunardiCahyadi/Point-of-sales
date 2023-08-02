@@ -11,6 +11,11 @@ import { RouterLink, RouterView } from 'vue-router'
           <i class="fas fa-shopping-cart"></i>
         </a>
       </RouterLink>
+      <RouterLink to="/">
+        <a class="navbar-brand" href="#">
+          <i class="MENU">MENU</i>
+        </a>
+      </RouterLink>
     </div>
   </nav>
   <RouterView></RouterView>

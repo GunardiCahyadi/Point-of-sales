@@ -9,7 +9,8 @@ export const useCounterStore = defineStore('counter', {
       products: null,
       tableNo: '',
       orders: null,
-      order: null
+      order: null,
+      qrCode: null
     }
   },
   actions: {
@@ -37,8 +38,10 @@ export const useCounterStore = defineStore('counter', {
           method: 'GET',
           url: this.url + '/products'
         })
-        // console.log(data.data, '<<< ini data')
+        // console.log(data.qrCode, '<<< ini data')
         this.products = data.data
+        this.qrCode = data.qrCode
+        // console.log(this.qrCode, '<<<ini qrcode')
       } catch (err) {
         console.log(err)
       }
@@ -112,6 +115,42 @@ export const useCounterStore = defineStore('counter', {
           url: this.url + `/generate-midtrans-token/${orderId}`
         })
         this.router.push('/ordersummary')
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async updateStatus() {
+      try {
+        const orderId = localStorage.getItem('orderId')
+        const { data } = await axios({
+          url: this.url + `/payments/${orderId}`,
+          method: 'patch'
+        })
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async payment() {
+      try {
+        const orderId = localStorage.getItem('orderId')
+        const { data } = await axios({
+          method: 'POST',
+          url: this.url + `/generate-midtrans-token/${orderId}`
+        })
+        // console.log(data.midtransToken.token)
+        const cb = this.updateStatus
+
+        window.snap.pay(data.midtransToken.token, {
+          onSuccess: function (result) {
+            /* You may add your own implementation here */
+            // alert('payment success!')
+            // console.log(result)
+            console.log('success payment bro')
+            cb()
+            localStorage.clear()
+          }
+        })
+        this.router.push('/tables')
       } catch (err) {
         console.log(err)
       }

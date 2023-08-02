@@ -6,7 +6,7 @@ export default {
     ...mapState(useCounterStore, ['order'])
   },
   methods: {
-    ...mapActions(useCounterStore, ['listOrder'])
+    ...mapActions(useCounterStore, ['listOrder', 'payment'])
   },
   created() {
     this.listOrder()
@@ -51,6 +51,6 @@ export default {
       </div>
     </div>
     <!-- End of Total Price Card -->
-    <button class="btn btn-primary" onclick="confirmOrder()">PAY</button>
+    <button class="btn btn-primary" @click="payment">PAY</button>
   </div>
 </template>
