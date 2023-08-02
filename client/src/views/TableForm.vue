@@ -1,13 +1,15 @@
 <script>
 import { mapState, mapActions, mapWritableState } from 'pinia'
 import { useCounterStore } from '../stores/counter'
+import { RouterLink } from 'vue-router'
 export default {
   computed: {
     ...mapWritableState(useCounterStore, ['tableNo'])
   },
   methods: {
     ...mapActions(useCounterStore, ['table'])
-  }
+  },
+  components: { RouterLink }
 }
 </script>
 
@@ -26,7 +28,9 @@ export default {
               placeholder="Enter Table Number"
             />
           </div>
-          <button type="submit" class="btn btn-primary btn-block">Submit</button>
+          <RouterLink to="/qrcode">
+            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+          </RouterLink>
         </form>
       </div>
     </div>
