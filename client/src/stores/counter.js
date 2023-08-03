@@ -1,16 +1,19 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+// ES6 Modules or TypeScript
+import Swal from 'sweetalert2'
 
 export const useCounterStore = defineStore('counter', {
   state: () => {
     return {
-      url: 'http://localhost:3000',
+      url: 'http://pos-bk.gunardicahyadi.com',
       products: null,
       tableNo: '',
       orders: null,
       order: null,
-      qrCode: null
+      qrCode: null,
+      totalPage: 0
     }
   },
   actions: {
@@ -27,19 +30,21 @@ export const useCounterStore = defineStore('counter', {
 
         localStorage.setItem('orderId', response.data.orderId)
         localStorage.setItem('tableId', response.data.tableId)
-        this.router.push('/')
+        this.router.push('/qrcode')
+        Swal.fire('Success!', 'Please scan qrcode!')
       } catch (err) {
         console.log(err)
       }
     },
-    async listProduct() {
+    async listProduct(id = 1) {
       try {
         const { data } = await axios({
           method: 'GET',
-          url: this.url + '/products'
+          url: this.url + `/products?page=${id}`
         })
-        // console.log(data.qrCode, '<<< ini data')
-        this.products = data.data
+        console.log(data.data)
+        this.totalPage = data.totalPage
+        this.products = data.data.rows
         this.qrCode = data.qrCode
         // console.log(this.qrCode, '<<<ini qrcode')
       } catch (err) {
@@ -71,6 +76,7 @@ export const useCounterStore = defineStore('counter', {
           }
         })
         this.listOrderDetail()
+        Swal.fire('Success add to cart')
         this.router.push('/order')
       } catch (err) {
         console.log(err)
